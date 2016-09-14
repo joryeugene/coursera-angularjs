@@ -11,6 +11,7 @@ function LunchCheckController($scope) {
   $scope.checkedBorder = '';
 
   $scope.validateInput = function () {
+    // Mostly to check if the input box was even touched
     if ($scope.menuItems === undefined || $scope.menuItems.trim() === "") {
       $scope.message = 'Please enter data first';
       $scope.checkedMessage = 'checkedMessageInvalid';
@@ -21,14 +22,22 @@ function LunchCheckController($scope) {
   };
 
   $scope.checkNumOfItems = function () {
-    var trimmed = $scope.menuItems.trim();
-    var numOfCommas = 0;
-    for (var i = 0; i < trimmed.length; i++) {
-      if (trimmed[i] === ',') {
-        numOfCommas++;
-      }
+    var itemsArray = $scope.menuItems.split(',');
+    var verifiedArray = [];
+
+    // Remove empty array elements
+    for (var i = 0; i < itemsArray.length; i++) {
+      var item = itemsArray[i].trim();
+      verifiedArray.push(item);
     }
-    if (numOfCommas <= 2) {
+
+    var numberOfItems = verifiedArray.filter(Boolean).length;
+
+    if (numberOfItems === 0) {
+      $scope.message = 'Please enter data first';
+      $scope.checkedMessage = 'checkedMessageInvalid';
+      $scope.checkedBorder = 'checkedBorderInvalid';
+    } else if (numberOfItems <= 3) {
       $scope.message = 'Enjoy!';
       $scope.checkedMessage = 'checkedMessageValid';
       $scope.checkedBorder = 'checkedBorderValid';
@@ -37,7 +46,7 @@ function LunchCheckController($scope) {
       $scope.checkedMessage = 'checkedMessageValid';
       $scope.checkedBorder = 'checkedBorderValid';
     }
-
   };
 }
+
 })();
